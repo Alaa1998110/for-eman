@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For Eman</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
   * {
     margin: 0;
@@ -17,8 +18,7 @@
   }
 
   body {
-    background: linear-gradient(135deg, #ffe6ee 0%, #ffd1e0 50%, #ffc2d6 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Playfair Display', serif;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -28,6 +28,32 @@
     height: 100vh;
   }
 
+  /* Background photo */
+  #bg-photo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -3;
+    filter: brightness(0.55) saturate(0.9);
+  }
+
+  /* Soft rose overlay so text stays readable and mood stays romantic */
+  #bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg,
+      rgba(40, 5, 20, 0.55) 0%,
+      rgba(80, 10, 35, 0.35) 40%,
+      rgba(40, 5, 20, 0.65) 100%);
+    z-index: -2;
+  }
+
   #hearts-layer {
     position: fixed;
     top: 0;
@@ -35,7 +61,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 1;
+    z-index: -1;
   }
 
   .floating-heart {
@@ -45,6 +71,7 @@
     animation: floatUp 5s ease-in forwards;
     opacity: 0.9;
     user-select: none;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
   }
 
   @keyframes floatUp {
@@ -67,22 +94,29 @@
   }
 
   #sentence {
-    font-size: 44px;
-    font-weight: bold;
-    color: #b3004d;
-    text-shadow: 1px 1px 3px rgba(255,255,255,0.7);
-    line-height: 1.4;
-    min-height: 130px;
+    font-family: 'Playfair Display', serif;
+    font-size: 46px;
+    font-weight: 700;
+    color: #fff5f8;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.55), 0 0 30px rgba(255,150,180,0.3);
+    line-height: 1.5;
+    min-height: 140px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;
+    gap: 14px;
+    letter-spacing: 0.5px;
   }
 
   .word {
     opacity: 0;
     transform: translateY(10px);
-    animation: appear 0.5s forwards;
+    animation: appear 0.6s forwards;
+  }
+
+  .word.accent {
+    color: #ffb3c6;
+    font-style: italic;
   }
 
   @keyframes appear {
@@ -93,16 +127,30 @@
   }
 
   #signature {
-    margin-top: 20px;
-    font-size: 26px;
-    font-style: italic;
-    color: #800033;
+    margin-top: 28px;
+    font-family: 'Great Vibes', cursive;
+    font-size: 52px;
+    color: #ffd9e3;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
     opacity: 0;
-    transition: opacity 1s ease;
+    transition: opacity 1.2s ease;
+    position: relative;
+    display: inline-block;
   }
 
   #signature.show {
     opacity: 1;
+  }
+
+  #signature::before,
+  #signature::after {
+    content: '❦';
+    font-family: serif;
+    font-size: 20px;
+    color: #ffb3c6;
+    vertical-align: middle;
+    margin: 0 14px;
+    opacity: 0.8;
   }
 
   #heart-button {
@@ -115,7 +163,7 @@
     z-index: 3;
     user-select: none;
     transition: transform 0.15s ease;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
   }
 
   #heart-button:active {
@@ -126,18 +174,22 @@
     position: fixed;
     top: 20px;
     right: 20px;
-    font-size: 14px;
-    color: #800033;
-    opacity: 0.7;
+    font-family: 'Dancing Script', cursive;
+    font-size: 20px;
+    color: #ffe3ea;
+    opacity: 0.85;
     z-index: 3;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
   }
 
   #final-message {
-    margin-top: 15px;
-    font-size: 18px;
-    color: #a30052;
+    margin-top: 18px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    color: #ffe3ea;
     opacity: 0;
     transition: opacity 1s ease;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.6);
   }
 
   #final-message.show {
@@ -147,11 +199,13 @@
 </head>
 <body>
 
+  <img id="bg-photo" src="background.jpg" alt="">
+  <div id="bg-overlay"></div>
   <div id="hearts-layer"></div>
 
   <div id="content">
     <div id="sentence"></div>
-    <div id="signature">— Alaa</div>
+    <div id="signature">Alaa</div>
     <div id="final-message">💗 Thank you for clicking, Eman 💗</div>
   </div>
 
@@ -161,6 +215,7 @@
 
   <script>
     const sentence = "I will love you Eman forever".split(" ");
+    const accentWords = ["Eman", "forever"];
     const sentenceEl = document.getElementById('sentence');
     const signatureEl = document.getElementById('signature');
     const finalMessageEl = document.getElementById('final-message');
@@ -176,6 +231,9 @@
     function addWord(index) {
       const span = document.createElement('span');
       span.classList.add('word');
+      if (accentWords.includes(sentence[index])) {
+        span.classList.add('accent');
+      }
       span.textContent = sentence[index];
       sentenceEl.appendChild(span);
     }
@@ -195,6 +253,7 @@
       }, 8000);
     }
 
+    // Hearts only ever appear as a direct result of a click - no auto-generation.
     heartButton.addEventListener('click', () => {
       if (clickCount >= MAX_CLICKS) return;
 
