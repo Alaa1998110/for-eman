@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Eman</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: linear-gradient(135deg, #ffe6ee 0%, #ffd1e0 50%, #ffc2d6 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #hearts-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .floating-heart {
+    position: absolute;
+    bottom: -40px;
+    font-size: 28px;
+    animation: floatUp 5s ease-in forwards;
+    opacity: 0.9;
+    user-select: none;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(-110vh) translateX(var(--drift, 0px)) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  #content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 20px;
+    max-width: 90%;
+  }
+
+  #sentence {
+    font-size: 44px;
+    font-weight: bold;
+    color: #b3004d;
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.7);
+    line-height: 1.4;
+    min-height: 130px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .word {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: appear 0.5s forwards;
+  }
+
+  @keyframes appear {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  #signature {
+    margin-top: 20px;
+    font-size: 26px;
+    font-style: italic;
+    color: #800033;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  #signature.show {
+    opacity: 1;
+  }
+
+  #heart-button {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 64px;
+    cursor: pointer;
+    z-index: 3;
+    user-select: none;
+    transition: transform 0.15s ease;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+  }
+
+  #heart-button:active {
+    transform: translateX(-50%) scale(1.3);
+  }
+
+  #counter {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 14px;
+    color: #800033;
+    opacity: 0.7;
+    z-index: 3;
+  }
+
+  #final-message {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #a30052;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  #final-message.show {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+  <div id="hearts-layer"></div>
+
+  <div id="content">
+    <div id="sentence"></div>
+    <div id="signature">— Alaa</div>
+    <div id="final-message">💗 Thank you for clicking, Eman 💗</div>
+  </div>
+
+  <div id="counter">0 / 50</div>
+
+  <div id="heart-button">❤️</div>
+
+  <script>
+    const sentence = "I will love you Eman forever".split(" ");
+    const sentenceEl = document.getElementById('sentence');
+    const signatureEl = document.getElementById('signature');
+    const finalMessageEl = document.getElementById('final-message');
+    const heartsLayer = document.getElementById('hearts-layer');
+    const heartButton = document.getElementById('heart-button');
+    const counterEl = document.getElementById('counter');
+
+    const MAX_CLICKS = 50;
+    let clickCount = 0;
+
+    const heartEmojis = ['❤️', '💖', '💕', '💗', '💓', '💘'];
+
+    function addWord(index) {
+      const span = document.createElement('span');
+      span.classList.add('word');
+      span.textContent = sentence[index];
+      sentenceEl.appendChild(span);
+    }
+
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('floating-heart');
+      heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+      heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+      heart.style.animationDuration = (4 + Math.random() * 3) + 's';
+      heartsLayer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 8000);
+    }
+
+    heartButton.addEventListener('click', () => {
+      if (clickCount >= MAX_CLICKS) return;
+
+      clickCount++;
+      counterEl.textContent = clickCount + ' / ' + MAX_CLICKS;
+
+      if (clickCount <= sentence.length) {
+        addWord(clickCount - 1);
+      } else if (clickCount === sentence.length + 1) {
+        signatureEl.classList.add('show');
+      }
+
+      createFloatingHeart();
+
+      if (clickCount >= MAX_CLICKS) {
+        finalMessageEl.classList.add('show');
+        heartButton.style.pointerEvents = 'none';
+        heartButton.style.opacity = '0.5';
+      }
+    });
+  </script>
+
+</body>
+</html>
