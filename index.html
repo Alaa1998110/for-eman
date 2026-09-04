@@ -126,21 +126,22 @@
     color: #fff5f8;
     text-shadow: 0 2px 12px rgba(0,0,0,0.55), 0 0 30px rgba(255,150,180,0.3);
     line-height: 1.5;
-    min-height: 140px;
+    min-height: 220px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
-    gap: 14px;
+    align-items: center;
+    gap: 6px;
     letter-spacing: 0.5px;
   }
 
-  .word {
+  .line {
     opacity: 0;
     transform: translateY(10px);
     animation: appear 0.6s forwards;
   }
 
-  .word.accent {
+  .line.accent {
     color: #ffb3c6;
     font-style: italic;
   }
@@ -254,7 +255,7 @@
   <div id="heart-button">❤️</div>
 
   <script>
-    const sentence = "I will love you Eman forever".split(" ");
+    const sentence = ["Eman", "I will love you", "forever", "I promise"];
     const accentWords = ["Eman", "forever"];
     const sentenceEl = document.getElementById('sentence');
     const signatureEl = document.getElementById('signature');
@@ -268,14 +269,14 @@
 
     const heartEmojis = ['❤️', '💖', '💕', '💗', '💓', '💘'];
 
-    function addWord(index) {
-      const span = document.createElement('span');
-      span.classList.add('word');
+    function addLine(index) {
+      const div = document.createElement('div');
+      div.classList.add('line');
       if (accentWords.includes(sentence[index])) {
-        span.classList.add('accent');
+        div.classList.add('accent');
       }
-      span.textContent = sentence[index];
-      sentenceEl.appendChild(span);
+      div.textContent = sentence[index];
+      sentenceEl.appendChild(div);
     }
 
     function createFloatingItem(emoji) {
@@ -301,7 +302,7 @@
       counterEl.textContent = clickCount + ' / ' + MAX_CLICKS;
 
       if (clickCount <= sentence.length) {
-        addWord(clickCount - 1);
+        addLine(clickCount - 1);
       } else if (clickCount === sentence.length + 1) {
         signatureEl.classList.add('show');
       }
